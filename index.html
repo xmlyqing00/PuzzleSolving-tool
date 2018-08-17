@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>Puzzle Solving</title>
+
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+	<!-- jquery -->
+	<script type="text/javascript" src="js/lib/jquery-3.3.1.min.js"></script>
+
+	<!-- bootstrap -->
+	<script type="text/javascript" src="js/lib/popper.min.js"></script>
+	<script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
+
+	<!-- FileSaver.js -->
+	<script type="text/javascript" src="js/lib/canvas-toBlob.js"></script>
+	<script type="text/javascript" src="js/lib/FileSaver.min.js"></script>
+
+	<!-- zip.js -->
+	<script type="text/javascript" src="js/lib/jszip.min.js"></script>
+
+	<!-- custom js -->
+	<script type="text/javascript" src="js/puzzle_solving.js"></script>
+	<script type="text/javascript" src="js/utils.js"></script>
+
+</head>
+
+<body>
+	<div class="page">
+		<div class="main">
+			
+			<div class="row justify-content-start">
+				<strong>Composition:</strong>
+			</div>
+
+			<div class="row justify-content-start">
+				<hr>
+				<strong>Pairwise Matching:</strong>
+			</div>
+
+			<!-- Add pieces here. -->
+			<div class="row justify-content-start">
+				<hr>
+				<strong>All Pieces:</strong>
+			</div>
+			<div id="pieces"></div>
+
+			<div class="row justify-content-center">
+				<hr>
+				<p>Authors: Yongqing Liang, Xin Li. All rights reserved.</p>
+			</div>
+			
+
+		</div>
+		<div class="side">
+			
+			<div class="form-group">
+				<div class="form-row">
+					<strong>Infomation:</strong>
+				</div>
+				<div class="form-row">
+					<p>Pieces Number:</p>
+					<p class="offset-1" id="pieces-num">Unknown</p>
+				</div>
+				<div class="form-row">
+					<p>Piece Size:</p>
+					<p class="offset-1" id="piece-size">Unknown</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-row">
+					<strong>Status:</strong>
+				</div>
+				<div class="form-row">
+					<p id="status"></p>
+				</div>
+			</div>
+			
+			<hr>
+
+			<!-- Upload and Save Data -->
+			<div class="form-group">
+				<div class="form-row">
+					<strong>Input / Output:</strong>
+				</div>
+				<div class="form-row">
+					<input type="file" class="form-control-file" id="upload-file">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-row">
+					<button type="button" class="btn btn-primary btn-sm" onclick="uploadPieces()">
+						Upload Pieces
+					</button>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-row">
+					<button type="button" class="btn btn-primary btn-sm" id="btn-load-transforms" onclick="uploadTransform()" disabled>
+						Upload Transforms
+					</button>
+				</div>
+			</div>
+
+			<hr>
+
+			<!-- Pieces Parameters -->
+			<div class="form-group">
+				<div class="form-row">
+					<strong>Parameters:</strong>
+				</div>
+				<div class="form-row">
+					<label class="col-9 col-form-label">Row Seams: </label>
+					<input type="text" class="form-control form-control-sm col-3" id="row-seams" value="5">
+				</div>
+				<div class="form-row">
+					<label class="col-9 col-form-label">Col Seams: </label>
+					<input type="text" class="form-control form-control-sm col-3" id="col-seams" value="5">
+				</div>
+				<div class="form-row">
+					<label class="col-9 col-form-label">Small Region Pixel: </label>
+					<input type="text" class="form-control form-control-sm col-3" id="small-region" value="1000">
+				</div>
+				<div class="custom-control custom-radio">
+					<input type="radio" id="random-chopping" name="method" class="custom-control-input" value="random" checked>
+					<label class="custom-control-label" for="random-chopping">Random Chopping</label>
+				</div>
+				<br>
+				<button type="button" class="btn btn-primary btn-sm" onclick="startChopping()" id="start-chopping-btn" disabled>
+					Start Chopping
+				</button>
+			</div>
+
+			<hr>
+
+			<div class="form-group">
+				<div class="form-row">
+					<strong>Instructions:</strong>
+				</div>
+				<div class="form-row">
+					<p>Step 1. Upload an image.</p>
+					<p>Step 2. Start chopping.</p>
+					<p>Step 3. Save pieces.</p>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+
+</html>
