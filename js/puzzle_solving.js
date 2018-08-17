@@ -14,10 +14,15 @@ $(document).ready(function () {
 function uploadPieces() {
 
     var file = $("#upload-file")[0].files[0];
+    if (file == undefined) {
+        $("#status").html("Nothing to upload.");    
+        return;
+    }
+
     pkgName = file.name.substr(0, file.name.indexOf("."));
 
     console.log("Uploaded pieces package:", pkgName);
-    $("#status").html("Uploaded pieces package. Done");
+    $("#status").html("Uploaded pieces package.");
 
     JSZip.loadAsync(file).then(function(zip) {
 
@@ -36,7 +41,8 @@ function uploadPieces() {
                         pieceImgArr.push(pieceImg);
                         if (pieceImgArr.length == piecesNum) {
                             showPieces();
-                            $("btn-load-transforms")[0].disabled = false;
+                            $("#btn-load-transforms")[0].disabled = false;
+                            $("#upload-file")[0].value = "";
                         }
                     }
 
@@ -104,11 +110,17 @@ function showPieces() {
 
 }
 
-function loadTransforms() {
+function uploadGlobalTransform() {
 
     var file = $("#upload-file")[0].files[0];
+    if (file == undefined) {
+        $("#status").html("Nothing to upload.");    
+        return;
+    }
+
     var transformsName = file.name.substr(0, file.name.indexOf("."));
 
+    $("#status").html("Uploaded global transform.");
     console.log("Uploaded transforms:", transformsName);
 
     var fileReader = new FileReader();
@@ -116,6 +128,8 @@ function loadTransforms() {
     fileReader.onload = function() {
         transformsFile = fileReader.result;
         composeImage();
+
+        $("#upload-file")[0].value = "";
     }
 
     fileReader.readAsText(file);
@@ -123,7 +137,11 @@ function loadTransforms() {
 }
 
 function composeImage() {
-    console.log(transformsFile);
+    
+    globalTransforms = JSON.parse(transformsFile);
+
+    console.log(globalTransforms);
+
 }
 
 function initImgCanvas() {
