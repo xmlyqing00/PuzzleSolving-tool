@@ -3,14 +3,21 @@ var piecesNum;
 var pieceWidth, pieceHeight;
 var pieceDisplayWidth = 230;
 
-var transformsFile;
+var transformsFile, globalTransforms;
 
 var emptyThres = 20;
 
 var showBoundaryStatus = false;
+var secondPieceTransform;
+var pieceId0, pieceId1;
 
 $(document).ready(function () {
 
+    var mousePointSt;
+    
+    $("#pairwise-interaction").mousedown(function() {
+
+    });
 
 });
 
@@ -66,6 +73,7 @@ function uploadPieces() {
 
                             showPieces();
                             $("#btn-load-transforms")[0].disabled = false;
+                            $("#btn-select-pieces")[0].disabled = false;
                             $("#upload-file")[0].value = "";
 
                         }
@@ -281,8 +289,8 @@ function composeImage() {
 
 function selectPieces() {
 
-    var pieceId0 = parseInt($("#piece-id0").val());
-    var pieceId1 = parseInt($("#piece-id1").val());
+    pieceId0 = parseInt($("#piece-id0").val());
+    pieceId1 = parseInt($("#piece-id1").val());
 
     if (pieceId0 < 0 || pieceId0 >= piecesNum ||
         pieceId1 < 0 || pieceId1 >= piecesNum) {
@@ -292,19 +300,50 @@ function selectPieces() {
     
     var pairwiseCanvas = document.createElement("canvas");
     pairwiseCanvas.width = 960;
-    pairwiseCanvas.height = 960 / (pieceWidth * 2) * pieceHeight;
+    pairwiseCanvas.height = 960 / (pieceWidth * 3) * (pieceHeight * 3);
+    pairwiseCanvas.id = "pairwise-canvas";
     $("#pairwise-interaction").empty();
     $("#pairwise-interaction").append(pairwiseCanvas);
     
+    if (globalTransforms == undefined) {
+        
+        secondPieceTransform = {
+            dx: 0,
+            dy: 0,
+            rotation: 0
+        };
+        
+        showPairwisePieces();
+
+    } else {
+
+    }
+    
+
+}
+
+function showPairwisePieces() {
+
+    var pairwiseCanvas = $("#pairwise-canvas")[0];
     var pairwiseCtx = pairwiseCanvas.getContext("2d");
-    pairwiseCtx.drawImage(pieceImgArr[pieceId0], 0, 0, pairwiseCanvas.width / 2, pairwiseCanvas.height);
-    pairwiseCtx.drawImage(pieceImgArr[pieceId1], pairwiseCanvas.width / 2, 0, pairwiseCanvas.width / 2, pairwiseCanvas.height);
+
+    pairwiseCtx.drawImage(pieceImgArr[pieceId0], 
+        pairwiseCanvas.width / 3, pairwiseCanvas.height / 3, 
+        pairwiseCanvas.width / 3, pairwiseCanvas.height / 3);
+
+    pairwiseCtx.drawImage(pieceImgArr[pieceId1], 
+        pairwiseCanvas.width * 2 / 3, pairwiseCanvas.height / 3, 
+        pairwiseCanvas.width / 3, pairwiseCanvas.height / 3);
+
 
 }
 
 function toggleBoundary() {
 
     showBoundaryStatus = !showBoundaryStatus;
+
+    
+
 }
 
 
