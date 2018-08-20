@@ -272,6 +272,29 @@ function composeImage() {
 
 }
 
+function selectPieces() {
+
+    var pieceId0 = parseInt($("#piece-id0").val());
+    var pieceId1 = parseInt($("#piece-id1").val());
+
+    if (pieceId0 < 0 || pieceId0 >= piecesNum ||
+        pieceId1 < 0 || pieceId1 >= piecesNum) {
+            console.log("Invalided piece id.");
+            return;
+        }
+    
+    var pairwiseCanvas = document.createElement("canvas");
+    pairwiseCanvas.width = 960;
+    pairwiseCanvas.height = 960 / (pieceWidth * 2) * pieceHeight;
+    $("#pairwise-interaction").empty();
+    $("#pairwise-interaction").append(pairwiseCanvas);
+    
+    var pairwiseCtx = pairwiseCanvas.getContext("2d");
+    pairwiseCtx.drawImage(pieceImgArr[pieceId0], 0, 0, pairwiseCanvas.width / 2, pairwiseCanvas.height);
+    pairwiseCtx.drawImage(pieceImgArr[pieceId1], pairwiseCanvas.width / 2, 0, pairwiseCanvas.width / 2, pairwiseCanvas.height);
+
+}
+
 function initImgCanvas() {
 
     imgCanvas = document.createElement("canvas");

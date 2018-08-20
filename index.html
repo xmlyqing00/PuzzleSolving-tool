@@ -36,6 +36,7 @@
 			
 			<div class="row justify-content-start">
 				<strong>Pairwise Matching:</strong>
+				<div id="pairwise-interaction"></div>
 			</div>
 
 			<div class="row justify-content-start">
@@ -118,28 +119,19 @@
 			<!-- Pieces Parameters -->
 			<div class="form-group">
 				<div class="form-row">
-					<strong>Parameters:</strong>
+					<strong>Pairwise Interaction:</strong>
 				</div>
 				<div class="form-row">
-					<label class="col-9 col-form-label">Row Seams: </label>
-					<input type="text" class="form-control form-control-sm col-3" id="row-seams" value="5">
+					<p class="col-3 col-form-label">Pieces: </p>
+					<input type="text" class="form-control form-control-sm col-2" id="piece-id0" value="0">
+					<input type="text" class="form-control form-control-sm col-2" id="piece-id1" value="1">
+					<button type="button" class="btn btn-primary btn-sm offset-2 col-3" id="select-pieces" onclick="selectPieces()">Select</button>
 				</div>
 				<div class="form-row">
-					<label class="col-9 col-form-label">Col Seams: </label>
-					<input type="text" class="form-control form-control-sm col-3" id="col-seams" value="5">
+					<p class="col-5 col-form-label">Rotate 2nd Piece: </p>
+					<button type="button" class="btn btn-primary btn-sm col-3" id="select-pieces" onclick="rotateLeft()">Left</button>
+					<button type="button" class="btn btn-primary btn-sm offset-1 col-3" id="select-pieces" onclick="rotateRight()">Right</button>
 				</div>
-				<div class="form-row">
-					<label class="col-9 col-form-label">Small Region Pixel: </label>
-					<input type="text" class="form-control form-control-sm col-3" id="small-region" value="1000">
-				</div>
-				<div class="custom-control custom-radio">
-					<input type="radio" id="random-chopping" name="method" class="custom-control-input" value="random" checked>
-					<label class="custom-control-label" for="random-chopping">Random Chopping</label>
-				</div>
-				<br>
-				<button type="button" class="btn btn-primary btn-sm" onclick="startChopping()" id="start-chopping-btn" disabled>
-					Start Chopping
-				</button>
 			</div>
 
 			<hr>
@@ -149,9 +141,7 @@
 					<strong>Instructions:</strong>
 				</div>
 				<div class="form-row">
-					<p>Step 1. Upload an image.</p>
-					<p>Step 2. Start chopping.</p>
-					<p>Step 3. Save pieces.</p>
+					<p></p>
 				</div>
 			</div>
 
