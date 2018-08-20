@@ -1,9 +1,11 @@
 var pieceImgArr = [];
 var piecesNum;
 var pieceWidth, pieceHeight;
-var pieceDisplayWidth = 200;
+var pieceDisplayWidth = 230;
 
 var transformsFile;
+
+var emptyThres = 20;
 
 $(document).ready(function () {
 
@@ -38,12 +40,33 @@ function uploadPieces() {
                     var pieceImg = new Image();
 
                     pieceImg.onload = function() {
-                        pieceImgArr.push(pieceImg);
+                        
+                        var pieceId = getPieceID(relativePath);
+                        pieceImgArr.push({
+                            id: pieceId,
+                            img: pieceImg
+                        });
+
                         if (pieceImgArr.length == piecesNum) {
+                            
+                            var reSortArr = [];
+                            for (var i = 0; i < piecesNum; i++) {
+                                reSortArr[pieceImgArr[i].id] = pieceImgArr[i].img;
+                            }
+                            pieceImgArr = reSortArr;
+
+                            pieceWidth = pieceImgArr[0].width;
+                            pieceHeight = pieceImgArr[0].height;
+
+                            $("#piece-size").html(pieceWidth + " x " + pieceHeight);
+                            console.log("Load pieces done.");
+
                             showPieces();
                             $("#btn-load-transforms")[0].disabled = false;
                             $("#upload-file")[0].value = "";
+
                         }
+
                     }
 
                     pieceImg.src = "data:image/jpeg;base64," + data64;
@@ -53,18 +76,15 @@ function uploadPieces() {
 
         });
         
-        pieceWidth = pieceImgArr[0].width;
-        pieceHeight = pieceImgArr[0].height;
-
-        $("#piece-size").html(pieceWidth + " x " + pieceHeight);
-
-        console.log("Load pieces done.");
+        
 
     });
 
 }
 
 function showPieces() {
+
+    $("#pieces").empty();
 
     var rowNumLimited = 4;
     var rowNum = 0;
@@ -99,7 +119,7 @@ function showPieces() {
         index.innerHTML = i;
         rowIndexObj.append(index);
 
-        if (rowNum % rowNumLimited == 0) {
+        if (rowNum % rowNumLimited == 0 || i == pieceImgArr.length - 1) {
             $("#pieces").append(rowPiecesObj);
             $("#pieces").append(rowIndexObj);
         }
@@ -138,9 +158,117 @@ function uploadGlobalTransform() {
 
 function composeImage() {
     
-    globalTransforms = JSON.parse(transformsFile);
+    if (pieceWidth == 0 || pieceHeight == 0) {
+        $("#status").html("Pieces need to be uploaded.");
+        return;
+    }
 
-    console.log(globalTransforms);
+    $("#global-image").empty();
+
+    // Get global transforms.
+    transformsJSON = JSON.parse(transformsFile);
+    globalTransforms = [];
+    for (var i = 0; i < transformsJSON.length; i++) {
+        globalTransforms[transformsJSON[i].id] = {
+            dx: transformsJSON[i].dx,
+            dy: transformsJSON[i].dy,
+            rotation: transformsJSON[i].rotation
+        };
+    }
+
+    // Get global image size
+    var imageWidth = 0;
+    var imageHeight = 0;
+
+    for (var i = 0; i < globalTransforms.length; i++) {
+        imageWidth = Math.max(imageWidth, pieceWidth + globalTransforms[i].dx);
+        imageHeight = Math.max(imageHeight, pieceHeight + globalTransforms[i].dy);
+    }
+
+    $("#composition-size").html(imageWidth + " x " + imageHeight);
+
+    // Create global hidden canvas
+    var globalHiddenCanvas = document.createElement("canvas");
+    globalHiddenCanvas.width = imageWidth;
+    globalHiddenCanvas.height = imageHeight;
+    var globalHiddenCtx = globalHiddenCanvas.getContext("2d");
+
+    // Create piece hidden canvas
+    var pieceHiddenCanvas = document.createElement("canvas");
+    pieceHiddenCanvas.width = pieceWidth;
+    pieceHiddenCanvas.height = pieceHeight;
+    var pieceHiddenCtx = pieceHiddenCanvas.getContext("2d");
+
+    // Align each piece
+    for (var i = 0; i < piecesNum; i++) {
+
+        console.log("piece", i);
+
+        pieceHiddenCtx.save();        
+        pieceHiddenCtx.fillRect(0, 0, pieceWidth, pieceHeight);
+
+        // Rotation
+        pieceHiddenCtx.translate(pieceWidth/2, pieceHeight/2);
+        pieceHiddenCtx.rotate(globalTransforms[i].rotation);
+        pieceHiddenCtx.translate(-pieceWidth/2, -pieceHeight/2);
+
+        // Draw piece img to piece ctx
+        pieceHiddenCtx.drawImage(pieceImgArr[i], 0, 0);
+
+        // Translate
+        globalHiddenCtx = drawPieceToImage(pieceHiddenCtx, globalHiddenCtx, globalTransforms[i]);
+
+        pieceHiddenCtx.restore();
+
+    }
+
+    // Chop global bound
+    var globalHiddenData = globalHiddenCtx.getImageData(0, 0, imageWidth, imageHeight);
+
+    var foundLastEmptyLine = false;
+    for (var y = imageHeight - 1; y >= 0; y--) {
+        for (var x = 0; x < imageWidth; x++) {
+
+            var id = (y * imageWidth + x) * 4;
+            if (globalHiddenData.data[id] + globalHiddenData.data[id+1] + globalHiddenData.data[id+2] > emptyThres) {
+                imageHeight = y + 1;
+                foundLastEmptyLine = true;
+                break;
+            }
+    
+        }
+
+        if (foundLastEmptyLine) break;
+
+    }
+
+    foundLastEmptyLine = false;
+    for (var x = imageWidth - 1; x >= 0; x--) {
+        for (var y = 0; y < imageHeight; y++) {
+
+            var id = (y * imageWidth + x) * 4;
+            if (globalHiddenData.data[id] + globalHiddenData.data[id+1] + globalHiddenData.data[id+2] > emptyThres) {
+                imageWidth = x + 1;
+                foundLastEmptyLine = true;
+                break;
+            }
+    
+        }
+
+        if (foundLastEmptyLine) break;
+
+    }
+
+    // Create global Display canvas
+    var globalDisplayCanvas = document.createElement("canvas");
+    globalDisplayCanvas.width = 960;
+    globalDisplayCanvas.height = imageWidth / 960 * imageHeight;
+    $("#global-image").append(globalDisplayCanvas);
+
+    var globalDisplayCtx = globalDisplayCanvas.getContext("2d");
+    globalDisplayCtx.drawImage(globalHiddenCanvas, 
+        0, 0, imageWidth, imageHeight,
+        0, 0, globalDisplayCanvas.width, globalDisplayCanvas.height);
 
 }
 

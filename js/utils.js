@@ -1,6 +1,7 @@
 const way = [[0,1], [0,-1], [1,0], [-1,0], [1,1], [1,-1], [-1,1], [-1,-1]];
 const connectedWay = 4;
 const pieceReg = /piece-\d+(\.jpg$|\.jpeg$|\.png$|\.gif$|\.bmp$)/;
+const pieceNameReg = /piece-(\d+)(\.jpg$|\.jpeg$|\.png$|\.gif$|\.bmp$)/;
 
 function testPieceName(str) {
 
@@ -9,6 +10,13 @@ function testPieceName(str) {
     } else {
         return false;
     }
+
+}
+
+function getPieceID(str) {
+
+    var res = pieceNameReg.exec(str);
+    return res[1];
 
 }
 
@@ -25,6 +33,37 @@ function getPiecesNum(zip) {
     return num;
 
 }
+
+function drawPieceToImage(pieceHiddenCtx, globalHiddenCtx, pieceTransform) {
+    
+    var pieceData = pieceHiddenCtx.getImageData(0, 0, pieceWidth, pieceHeight);
+    var globalData = globalHiddenCtx.getImageData(pieceTransform.dx, pieceTransform.dy, pieceWidth, pieceHeight);
+
+    for (var y = Math.max(0, 0-pieceTransform.dy); y < pieceHeight; y++) {
+        for (var x = Math.max(0, 0-pieceTransform.dx); x < pieceWidth; x++) {
+
+            var id = (y * pieceWidth + x) * 4;
+            if (y == Math.max(0, 0-pieceTransform.dy) + 50) {
+                // console.log(y, x, "data", 
+                //     globalData.data[id] + globalData.data[id+1] + globalData.data[id+2],
+                //     pieceData.data[id] + pieceData.data[id+1] + pieceData.data[id+2]);
+            }
+            if (globalData.data[id] + globalData.data[id+1] + globalData.data[id+2] < emptyThres) {
+                globalData.data[id] = pieceData.data[id];
+                globalData.data[id + 1] = pieceData.data[id + 1];
+                globalData.data[id + 2] = pieceData.data[id + 2];
+                globalData.data[id + 3] = 255;
+            }
+            
+        }
+    }
+
+    globalHiddenCtx.putImageData(globalData, pieceTransform.dx, pieceTransform.dy);
+
+    return globalHiddenCtx;
+
+}
+
 
 function randNormDist(mean, stdDev) {
     return mean + (randStdNormDist() * stdDev);
