@@ -262,7 +262,7 @@ function composeImage() {
     // Create global Display canvas
     var globalDisplayCanvas = document.createElement("canvas");
     globalDisplayCanvas.width = 960;
-    globalDisplayCanvas.height = imageWidth / 960 * imageHeight;
+    globalDisplayCanvas.height = 960 / imageWidth * imageHeight;
     $("#global-image").append(globalDisplayCanvas);
 
     var globalDisplayCtx = globalDisplayCanvas.getContext("2d");
