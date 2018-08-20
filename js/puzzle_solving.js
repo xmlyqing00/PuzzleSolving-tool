@@ -7,11 +7,14 @@ var transformsFile;
 
 var emptyThres = 20;
 
+var showBoundaryStatus = false;
+
 $(document).ready(function () {
 
 
 });
 
+// Upload pieces
 
 function uploadPieces() {
 
@@ -129,6 +132,8 @@ function showPieces() {
     console.log("Show pieces.");
 
 }
+
+// Upload global transform
 
 function uploadGlobalTransform() {
 
@@ -272,6 +277,8 @@ function composeImage() {
 
 }
 
+// Pairwise Interaction
+
 function selectPieces() {
 
     var pieceId0 = parseInt($("#piece-id0").val());
@@ -294,6 +301,13 @@ function selectPieces() {
     pairwiseCtx.drawImage(pieceImgArr[pieceId1], pairwiseCanvas.width / 2, 0, pairwiseCanvas.width / 2, pairwiseCanvas.height);
 
 }
+
+function toggleBoundary() {
+
+    showBoundaryStatus = !showBoundaryStatus;
+}
+
+
 
 function initImgCanvas() {
 
