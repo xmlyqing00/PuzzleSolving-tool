@@ -15,8 +15,8 @@ $(document).ready(function () {
 
     var mousePointSt;
     
-    $("#pairwise-interaction").mousedown(function() {
-
+    $("#pairwise-interaction").mousedown(function(event) {
+        console.log(event.pageX, event.pageY);
     });
 
 });

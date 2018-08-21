@@ -128,9 +128,14 @@
 					<button type="button" class="btn btn-primary btn-sm offset-2 col-3" id="btn-select-pieces" onclick="selectPieces()" disabled>Select</button>
 				</div>
 				<div class="form-row">
+					<p class="col-5 col-form-label">Rotate 1st Piece: </p>
+					<button type="button" class="btn btn-primary btn-sm col-3" id="btn-rotate-first-left" onclick="rotateFirstLeft()" disabled>Left</button>
+					<button type="button" class="btn btn-primary btn-sm offset-1 col-3" id="btn-rotate-first-right" onclick="rotateFirstRight()" disabled>Right</button>
+				</div>
+				<div class="form-row">
 					<p class="col-5 col-form-label">Rotate 2nd Piece: </p>
-					<button type="button" class="btn btn-primary btn-sm col-3" id="btn-rotate-left" onclick="rotateLeft()">Left</button>
-					<button type="button" class="btn btn-primary btn-sm offset-1 col-3" id="btn-rotate-right" onclick="rotateRight()">Right</button>
+					<button type="button" class="btn btn-primary btn-sm col-3" id="btn-rotate-second-left" onclick="rotateSecondLeft()" disabled>Left</button>
+					<button type="button" class="btn btn-primary btn-sm offset-1 col-3" id="btn-rotate-second-right" onclick="rotateSecondRight()" disabled>Right</button>
 				</div>
 				<div class="form-row">
 					<button type="button" class="btn btn-primary btn-sm" id="btn-toggle-boundary" onclick="toggleBoundary()">Toggle boundary</button>
