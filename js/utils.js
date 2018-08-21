@@ -43,16 +43,11 @@ function drawPieceToImage(pieceHiddenCtx, globalHiddenCtx, pieceTransform) {
         for (var x = Math.max(0, 0-pieceTransform.dx); x < pieceWidth; x++) {
 
             var id = (y * pieceWidth + x) * 4;
-            if (y == Math.max(0, 0-pieceTransform.dy) + 50) {
-                // console.log(y, x, "data", 
-                //     globalData.data[id] + globalData.data[id+1] + globalData.data[id+2],
-                //     pieceData.data[id] + pieceData.data[id+1] + pieceData.data[id+2]);
-            }
             if (globalData.data[id] + globalData.data[id+1] + globalData.data[id+2] < emptyThres) {
                 globalData.data[id] = pieceData.data[id];
                 globalData.data[id + 1] = pieceData.data[id + 1];
                 globalData.data[id + 2] = pieceData.data[id + 2];
-                globalData.data[id + 3] = 255;
+                globalData.data[id + 3] = pieceData.data[id + 3];
             }
             
         }

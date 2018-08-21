@@ -8,13 +8,13 @@ var transformsFile, globalTransforms;
 var emptyThres = 20;
 
 var showBoundaryStatus = false;
-var secondPieceTransform;
+var pieceTransform0, pieceTransform1;
 var pieceId0, pieceId1;
 
 $(document).ready(function () {
 
     var mousePointSt;
-    
+
     $("#pairwise-interaction").mousedown(function(event) {
         console.log(event.pageX, event.pageY);
     });
@@ -215,8 +215,6 @@ function composeImage() {
     // Align each piece
     for (var i = 0; i < piecesNum; i++) {
 
-        console.log("piece", i);
-
         pieceHiddenCtx.save();        
         pieceHiddenCtx.fillRect(0, 0, pieceWidth, pieceHeight);
 
@@ -298,16 +296,27 @@ function selectPieces() {
             return;
         }
     
+    $("#btn-rotate-first-left")[0].disabled = false;
+    $("#btn-rotate-first-right")[0].disabled = false;
+    $("#btn-rotate-second-left")[0].disabled = false;
+    $("#btn-rotate-second-right")[0].disabled = false;
+
     var pairwiseCanvas = document.createElement("canvas");
     pairwiseCanvas.width = 960;
-    pairwiseCanvas.height = 960 / (pieceWidth * 3) * (pieceHeight * 3);
+    pairwiseCanvas.height = 960 / (pieceWidth / pieceHeight);
     pairwiseCanvas.id = "pairwise-canvas";
     $("#pairwise-interaction").empty();
     $("#pairwise-interaction").append(pairwiseCanvas);
     
     if (globalTransforms == undefined) {
         
-        secondPieceTransform = {
+        pieceTransform0 = {
+            dx: 0,
+            dy: 0,
+            rotation: 0
+        };
+
+        pieceTransform1 = {
             dx: 0,
             dy: 0,
             rotation: 0
@@ -316,25 +325,71 @@ function selectPieces() {
         showPairwisePieces();
 
     } else {
+        
+        pieceTransform0 = {
+            dx: 0,
+            dy: 0,
+            rotation: globalTransforms[pieceId0].rotation
+        };
+
+        pieceTransform1 = {
+            dx: pieceWidth + globalTransforms[pieceId1].dx - globalTransforms[pieceId0].dx,
+            dy: pieceHeight + globalTransforms[pieceId1].dy - globalTransforms[pieceId0].dy,
+            rotation: globalTransforms[pieceId1].rotation
+        };
+
+        showPairwisePieces();
 
     }
     
-
 }
 
 function showPairwisePieces() {
 
+    // Create hidden global canvas
+    var pairwiseHiddenCanvas = document.createElement("canvas");
+    pairwiseHiddenCanvas.width = pieceWidth * 3;
+    pairwiseHiddenCanvas.height = pieceHeight * 3;
+    var pairwiseHiddenCtx = pairwiseHiddenCanvas.getContext("2d");
+
+    // Create single piece hidden canvas
+    var pieceHiddenCanvas = document.createElement("canvas");
+    pieceHiddenCanvas.width = pieceWidth;
+    pieceHiddenCanvas.height = pieceHeight;
+
+    var pieceHiddenCtx = pieceHiddenCanvas.getContext("2d");
+
+    // Draw piece 0 to hidden global canvas
+    pieceHiddenCtx.save();
+    pieceHiddenCtx.translate(pieceWidth / 2, pieceHeight / 2);
+    pieceHiddenCtx.rotate(pieceTransform0.rotation);
+    pieceHiddenCtx.translate(-pieceWidth / 2, -pieceHeight / 2);
+    pieceHiddenCtx.drawImage(pieceImgArr[pieceId0], 0, 0);
+
+    pairwiseHiddenCtx.drawImage(pieceHiddenCanvas, 
+        pieceWidth, pieceHeight, pieceWidth, pieceHeight);
+
+    pieceHiddenCtx.restore();
+    
+    // Draw piece 1 to hidden global canvas
+    pieceHiddenCtx.save();
+    pieceHiddenCtx.clearRect(0, 0, pieceWidth, pieceHeight);
+    pieceHiddenCtx.translate(pieceWidth / 2, pieceHeight / 2);
+    pieceHiddenCtx.rotate(pieceTransform1.rotation);
+    pieceHiddenCtx.translate(-pieceWidth / 2, -pieceHeight / 2);
+    pieceHiddenCtx.drawImage(pieceImgArr[pieceId1], 0, 0);
+    
+    pairwiseHiddenCtx = drawPieceToImage(pieceHiddenCtx, pairwiseHiddenCtx, pieceTransform1);
+
+    pieceHiddenCtx.restore();
+
+    // Get global canvas;
     var pairwiseCanvas = $("#pairwise-canvas")[0];
     var pairwiseCtx = pairwiseCanvas.getContext("2d");
-
-    pairwiseCtx.drawImage(pieceImgArr[pieceId0], 
-        pairwiseCanvas.width / 3, pairwiseCanvas.height / 3, 
-        pairwiseCanvas.width / 3, pairwiseCanvas.height / 3);
-
-    pairwiseCtx.drawImage(pieceImgArr[pieceId1], 
-        pairwiseCanvas.width * 2 / 3, pairwiseCanvas.height / 3, 
-        pairwiseCanvas.width / 3, pairwiseCanvas.height / 3);
-
+    
+    // Draw hidden canvas to global canvas
+    pairwiseCtx.drawImage(pairwiseHiddenCanvas, 
+        0, 0, pairwiseCanvas.width, pairwiseCanvas.height);
 
 }
 
