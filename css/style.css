@@ -59,6 +59,10 @@ p {
     text-align: center;
 }
 
+.text-right {
+    text-align: right;
+}
+
 #scene {
     margin-bottom: 1rem;
 }

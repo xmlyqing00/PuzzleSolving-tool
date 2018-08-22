@@ -138,7 +138,27 @@
 					<button type="button" class="btn btn-primary btn-sm offset-1 col-3" id="btn-rotate-second-right" onclick="rotateSecondRight()" disabled>Right</button>
 				</div>
 				<div class="form-row">
-					<button type="button" class="btn btn-primary btn-sm" id="btn-toggle-boundary" onclick="toggleBoundary()">Toggle boundary</button>
+					<button type="button" class="btn btn-primary btn-sm col-8" id="btn-toggle-boundary" onclick="toggleBoundary()" disabled>Toggle boundary</button>
+					<button type="button" class="btn btn-primary btn-sm col-3 offset-1" id="btn-save-pairwise-transformation" onclick="savePairwiseTransformation()" disabled>Save</button>
+				</div>
+				<div class="form-row">
+					<p class="col-6 text-right">Piece 1</p>
+					<p class="col-6 text-right">Piece 2</p>
+				</div>
+				<div class="form-row">
+					<p class="col-2">dx:</p>
+					<p class="col-4 text-right" id="piece0-dx">0</p>
+					<p class="col-6 text-right" id="piece1-dx">0</p>
+				</div>
+				<div class="form-row">
+					<p class="col-2">dy:</p>
+					<p class="col-4 text-right" id="piece0-dy">0</p>
+					<p class="col-6 text-right" id="piece1-dy">0</p>
+				</div>
+				<div class="form-row">
+					<p class="col-2">ro:</p>
+					<p class="col-4 text-right" id="piece0-rotation">0</p>
+					<p class="col-6 text-right" id="piece1-rotation">0</p>
 				</div>
 			</div>
 

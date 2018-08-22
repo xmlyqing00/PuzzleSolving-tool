@@ -16,7 +16,11 @@ $(document).ready(function () {
     var mousePointSt;
 
     $("#pairwise-interaction").mousedown(function(event) {
-        console.log(event.pageX, event.pageY);
+        mousePointSt = {
+            x: event.pageX - $("#pairwise-interaction").offset().left,
+            y: event.pageY - $("#pairwise-interaction").offset().top,
+        }
+        console.log(mousePointSt);
     });
 
 });
@@ -341,6 +345,13 @@ function selectPieces() {
         showPairwisePieces();
 
     }
+
+    $("#piece0-dx").html(pieceTransform0.dx);
+    $("#piece1-dx").html(pieceTransform1.dx);
+    $("#piece0-dy").html(pieceTransform0.dy);
+    $("#piece1-dy").html(pieceTransform1.dy);
+    $("#piece0-rotation").html(pieceTransform0.rotation);
+    $("#piece1-rotation").html(pieceTransform1.rotation);
     
 }
 
