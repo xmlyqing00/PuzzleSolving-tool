@@ -9,18 +9,65 @@ var emptyThres = 20;
 
 var showBoundaryStatus = false;
 var pieceTransform0, pieceTransform1;
+var pairwiseScale = 1;
 var pieceId0, pieceId1;
+var mousePointPrev;
+var mouseStatus = false;
+var selectPairwisePieces = false;
 
 $(document).ready(function () {
-
-    var mousePointSt;
-
+    
     $("#pairwise-interaction").mousedown(function(event) {
-        mousePointSt = {
+
+        if (!selectPairwisePieces) return;
+
+        mousePointPrev = {
             x: event.pageX - $("#pairwise-interaction").offset().left,
             y: event.pageY - $("#pairwise-interaction").offset().top,
-        }
-        console.log(mousePointSt);
+        };
+
+        mouseStatus = true;
+
+    });
+
+    $("#pairwise-interaction").mousemove(function(event) {
+        
+        if (!mouseStatus) return;
+
+        var mousePoint = {
+            x: event.pageX - $("#pairwise-interaction").offset().left,
+            y: event.pageY - $("#pairwise-interaction").offset().top,
+        };
+
+        console.log(mousePoint);
+
+        pieceTransform1.dx += pairwiseScale * (mousePoint.x - mousePointPrev.x);
+        pieceTransform1.dy += pairwiseScale * (mousePoint.y - mousePointPrev.y);
+
+        mousePointPrev = mousePoint;
+
+        showPairwisePieces();
+        updatePieceTransformsInfo();
+
+    });
+
+    $("#pairwise-interaction").mouseup(function(event) {
+
+        var mousePoint = {
+            x: event.pageX - $("#pairwise-interaction").offset().left,
+            y: event.pageY - $("#pairwise-interaction").offset().top,
+        };
+
+        pieceTransform1.dx += pairwiseScale * (mousePoint.x - mousePointPrev.x);
+        pieceTransform1.dy += pairwiseScale * (mousePoint.y - mousePointPrev.y);
+
+        mousePointPrev = mousePoint;
+
+        showPairwisePieces();
+        updatePieceTransformsInfo();
+
+        mouseStatus = false;
+
     });
 
 });
@@ -300,6 +347,9 @@ function selectPieces() {
             return;
         }
     
+    selectPairwisePieces = true;
+    pairwiseScale = pieceWidth * 3 / 960;
+
     $("#btn-rotate-first-left")[0].disabled = false;
     $("#btn-rotate-first-right")[0].disabled = false;
     $("#btn-rotate-second-left")[0].disabled = false;
@@ -346,13 +396,19 @@ function selectPieces() {
 
     }
 
-    $("#piece0-dx").html(pieceTransform0.dx);
-    $("#piece1-dx").html(pieceTransform1.dx);
-    $("#piece0-dy").html(pieceTransform0.dy);
-    $("#piece1-dy").html(pieceTransform1.dy);
-    $("#piece0-rotation").html(pieceTransform0.rotation);
-    $("#piece1-rotation").html(pieceTransform1.rotation);
+    updatePieceTransformsInfo();
     
+}
+
+function updatePieceTransformsInfo() {
+
+    $("#piece0-dx").html(pieceTransform0.dx.toFixed(2));
+    $("#piece1-dx").html(pieceTransform1.dx.toFixed(2));
+    $("#piece0-dy").html(pieceTransform0.dy.toFixed(2));
+    $("#piece1-dy").html(pieceTransform1.dy.toFixed(2));
+    $("#piece0-rotation").html(pieceTransform0.rotation.toFixed(2));
+    $("#piece1-rotation").html(pieceTransform1.rotation.toFixed(2));
+
 }
 
 function showPairwisePieces() {
@@ -399,6 +455,7 @@ function showPairwisePieces() {
     var pairwiseCtx = pairwiseCanvas.getContext("2d");
     
     // Draw hidden canvas to global canvas
+    pairwiseCtx.clearRect(0, 0, pairwiseCanvas.width, pairwiseCanvas.height);
     pairwiseCtx.drawImage(pairwiseHiddenCanvas, 
         0, 0, pairwiseCanvas.width, pairwiseCanvas.height);
 
