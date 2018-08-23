@@ -37,14 +37,14 @@ function getPiecesNum(zip) {
 function drawPieceToImage(pieceHiddenCtx, globalHiddenCtx, pieceTransform) {
     
     var pieceData = pieceHiddenCtx.getImageData(0, 0, pieceWidth, pieceHeight);
-    console.log("draw 2", pieceTransform, pieceData);
     var globalData = globalHiddenCtx.getImageData(pieceTransform.dx, pieceTransform.dy, pieceWidth, pieceHeight);
 
+    console.log(pieceTransform, pieceData, globalData);
     for (var y = Math.max(0, 0-pieceTransform.dy); y < pieceHeight; y++) {
         for (var x = Math.max(0, 0-pieceTransform.dx); x < pieceWidth; x++) {
 
             var id = (y * pieceWidth + x) * 4;
-            if (globalData.data[id] + globalData.data[id+1] + globalData.data[id+2] < emptyThres) {
+            if (globalData.data[id + 3] == 0 && pieceData.data[id + 3] == 255) {
                 globalData.data[id] = pieceData.data[id];
                 globalData.data[id + 1] = pieceData.data[id + 1];
                 globalData.data[id + 2] = pieceData.data[id + 2];
