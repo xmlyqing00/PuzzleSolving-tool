@@ -1,19 +1,29 @@
+// Show pieces
 var pieceImgArr = [];
 var piecesNum;
 var pieceWidth, pieceHeight;
-var pieceDisplayWidth = 230;
+const pieceDisplayWidth = 230;
 
 var transformsFile, globalTransforms;
 
 var emptyThres = 20;
 
-var showBoundaryStatus = false;
+// Pairwise interaction
 var pieceTransform0, pieceTransform1;
 var pairwiseScale = 1;
 var pieceId0, pieceId1;
+
+// Show boundary
+var showBoundaryStatus = false;
+
+// Translate
 var mousePointPrev;
 var mouseStatus = false;
 var selectPairwisePieces = false;
+
+// Rotate
+const PI_2 = 2 * Math.PI;
+const rotate_step = 0.08727;
 
 $(document).ready(function () {
     
@@ -44,8 +54,8 @@ $(document).ready(function () {
 
         mousePointPrev = mousePoint;
 
-        showPairwisePieces();
         updatePieceTransformsInfo();
+        showPairwisePieces();
 
     });
 
@@ -442,6 +452,54 @@ function showPairwisePieces() {
     pairwiseCtx.clearRect(0, 0, pairwiseCanvas.width, pairwiseCanvas.height);
     pairwiseCtx.drawImage(pairwiseHiddenCanvas, 
         0, 0, pairwiseCanvas.width, pairwiseCanvas.height);
+
+}
+
+function rotateFirstLeft() {
+
+    pieceTransform0.rotation -= rotate_step;
+    if (pieceTransform0.rotation > PI_2) {
+        pieceTransform0.rotation -= PI_2;
+    }
+
+    updatePieceTransformsInfo();
+    showPairwisePieces();
+
+}
+
+function rotateFirstRight() {
+
+    pieceTransform0.rotation += rotate_step;
+    if (pieceTransform0.rotation > PI_2) {
+        pieceTransform0.rotation -= PI_2;
+    }
+
+    updatePieceTransformsInfo();
+    showPairwisePieces();
+
+}
+
+function rotateSecondLeft() {
+
+    pieceTransform1.rotation -= rotate_step;
+    if (pieceTransform1.rotation > PI_2) {
+        pieceTransform1.rotation -= PI_2;
+    }
+
+    updatePieceTransformsInfo();
+    showPairwisePieces();
+
+}
+
+function rotateSecondRight() {
+
+    pieceTransform1.rotation += rotate_step;
+    if (pieceTransform1.rotation > PI_2) {
+        pieceTransform1.rotation -= PI_2;
+    }
+
+    updatePieceTransformsInfo();
+    showPairwisePieces();
 
 }
 
