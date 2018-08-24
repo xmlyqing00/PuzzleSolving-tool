@@ -13,8 +13,8 @@ var pieceTransform0, pieceTransform1;
 var pairwiseScale = 1;
 var pieceId0, pieceId1;
 
-// Show boundary
-var showBoundaryStatus = false;
+// Show contour
+var showContourStatus = false;
 
 // Translate
 var mousePointPrev;
@@ -347,6 +347,7 @@ function selectPieces() {
     $("#btn-rotate-first-right")[0].disabled = false;
     $("#btn-rotate-second-left")[0].disabled = false;
     $("#btn-rotate-second-right")[0].disabled = false;
+    $("#btn-toggle-contour")[0].disabled = false;
 
     var pairwiseCanvas = document.createElement("canvas");
     pairwiseCanvas.width = 960;
@@ -426,11 +427,15 @@ function showPairwisePieces() {
     pieceHiddenCtx.rotate(pieceTransform0.rotation);
     pieceHiddenCtx.translate(-pieceWidth / 2, -pieceHeight / 2);
     pieceHiddenCtx.drawImage(pieceImgArr[pieceId0], 0, 0);
+    pieceHiddenCtx.restore();
 
+    // Add contour
+    if (showContourStatus) {
+        pieceHiddenCtx = drawContour(pieceHiddenCtx);
+    }
+    
     pairwiseHiddenCtx.drawImage(pieceHiddenCanvas, 
         pieceWidth, pieceHeight, pieceWidth, pieceHeight);
-
-    pieceHiddenCtx.restore();
     
     // Draw piece 1 to hidden global canvas
     pieceHiddenCtx.save();
@@ -439,10 +444,14 @@ function showPairwisePieces() {
     pieceHiddenCtx.rotate(pieceTransform1.rotation);
     pieceHiddenCtx.translate(-pieceWidth / 2, -pieceHeight / 2);
     pieceHiddenCtx.drawImage(pieceImgArr[pieceId1], 0, 0);
+    pieceHiddenCtx.restore();
+
+    // Add contour
+    if (showContourStatus) {
+        pieceHiddenCtx = drawContour(pieceHiddenCtx);
+    }
     
     pairwiseHiddenCtx = drawPieceToImage(pieceHiddenCtx, pairwiseHiddenCtx, pieceTransform1);
-
-    pieceHiddenCtx.restore();
 
     // Get global canvas;
     var pairwiseCanvas = $("#pairwise-canvas")[0];
@@ -503,11 +512,11 @@ function rotateSecondRight() {
 
 }
 
-function toggleBoundary() {
+function toggleContour() {
 
-    showBoundaryStatus = !showBoundaryStatus;
+    showContourStatus = !showContourStatus;
 
-    
+    showPairwisePieces();
 
 }
 
