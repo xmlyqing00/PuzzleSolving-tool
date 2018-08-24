@@ -398,9 +398,9 @@ function selectPieces() {
 function updatePieceTransformsInfo() {
 
     $("#piece0-dx").html(pieceTransform0.dx.toFixed(2));
-    $("#piece1-dx").html(pieceTransform1.dx.toFixed(2));
+    $("#piece1-dx").html((pieceTransform1.dx - pieceWidth).toFixed(2));
     $("#piece0-dy").html(pieceTransform0.dy.toFixed(2));
-    $("#piece1-dy").html(pieceTransform1.dy.toFixed(2));
+    $("#piece1-dy").html((pieceTransform1.dy - pieceHeight).toFixed(2));
     $("#piece0-rotation").html(pieceTransform0.rotation.toFixed(2));
     $("#piece1-rotation").html(pieceTransform1.rotation.toFixed(2));
 
