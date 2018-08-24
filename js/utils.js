@@ -38,10 +38,14 @@ function drawPieceToImage(pieceHiddenCtx, globalHiddenCtx, pieceTransform) {
     
     var pieceData = pieceHiddenCtx.getImageData(0, 0, pieceWidth, pieceHeight);
     var globalData = globalHiddenCtx.getImageData(pieceTransform.dx, pieceTransform.dy, pieceWidth, pieceHeight);
-
-    console.log(pieceTransform, pieceData, globalData);
-    for (var y = Math.max(0, 0-pieceTransform.dy); y < pieceHeight; y++) {
-        for (var x = Math.max(0, 0-pieceTransform.dx); x < pieceWidth; x++) {
+    
+    // Notes:
+    // Math.floor for the variable loop is very important.
+    // Because when either dx or dy is a float number, the pieceData can not be read correctly.
+    // The result will be empty.
+    
+    for (var y = Math.floor(Math.max(0, 0-pieceTransform.dy)); y < pieceHeight; y++) {
+        for (var x = Math.floor(Math.max(0, 0-pieceTransform.dx)); x < pieceWidth; x++) {
 
             var id = (y * pieceWidth + x) * 4;
             if (globalData.data[id + 3] == 0 && pieceData.data[id + 3] == 255) {

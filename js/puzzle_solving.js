@@ -39,8 +39,6 @@ $(document).ready(function () {
             y: event.pageY - $("#pairwise-interaction").offset().top,
         };
 
-        console.log(mousePoint);
-
         pieceTransform1.dx += pairwiseScale * (mousePoint.x - mousePointPrev.x);
         pieceTransform1.dy += pairwiseScale * (mousePoint.y - mousePointPrev.y);
 
@@ -52,22 +50,7 @@ $(document).ready(function () {
     });
 
     $("#pairwise-interaction").mouseup(function(event) {
-
-        var mousePoint = {
-            x: event.pageX - $("#pairwise-interaction").offset().left,
-            y: event.pageY - $("#pairwise-interaction").offset().top,
-        };
-
-        pieceTransform1.dx += pairwiseScale * (mousePoint.x - mousePointPrev.x);
-        pieceTransform1.dy += pairwiseScale * (mousePoint.y - mousePointPrev.y);
-
-        mousePointPrev = mousePoint;
-
-        showPairwisePieces();
-        updatePieceTransformsInfo();
-
         mouseStatus = false;
-
     });
 
 });
@@ -249,8 +232,6 @@ function composeImage() {
         imageHeight = Math.max(imageHeight, pieceHeight + globalTransforms[i].dy);
     }
 
-    $("#composition-size").html(imageWidth + " x " + imageHeight);
-
     // Create global hidden canvas
     var globalHiddenCanvas = document.createElement("canvas");
     globalHiddenCanvas.width = imageWidth;
@@ -267,7 +248,7 @@ function composeImage() {
     for (var i = 0; i < piecesNum; i++) {
 
         pieceHiddenCtx.save();        
-        pieceHiddenCtx.fillRect(0, 0, pieceWidth, pieceHeight);
+        pieceHiddenCtx.clearRect(0, 0, pieceWidth, pieceHeight);
 
         // Rotation
         pieceHiddenCtx.translate(pieceWidth/2, pieceHeight/2);
@@ -292,7 +273,7 @@ function composeImage() {
         for (var x = 0; x < imageWidth; x++) {
 
             var id = (y * imageWidth + x) * 4;
-            if (globalHiddenData.data[id] + globalHiddenData.data[id+1] + globalHiddenData.data[id+2] > emptyThres) {
+            if (globalHiddenData.data[id + 3] == 255) {
                 imageHeight = y + 1;
                 foundLastEmptyLine = true;
                 break;
@@ -309,7 +290,7 @@ function composeImage() {
         for (var y = 0; y < imageHeight; y++) {
 
             var id = (y * imageWidth + x) * 4;
-            if (globalHiddenData.data[id] + globalHiddenData.data[id+1] + globalHiddenData.data[id+2] > emptyThres) {
+            if (globalHiddenData.data[id + 3] == 255) {
                 imageWidth = x + 1;
                 foundLastEmptyLine = true;
                 break;
@@ -320,6 +301,8 @@ function composeImage() {
         if (foundLastEmptyLine) break;
 
     }
+
+    $("#composition-size").html(imageWidth + " x " + imageHeight);
 
     // Create global Display canvas
     var globalDisplayCanvas = document.createElement("canvas");
@@ -359,9 +342,10 @@ function selectPieces() {
     pairwiseCanvas.width = 960;
     pairwiseCanvas.height = 960 / (pieceWidth / pieceHeight);
     pairwiseCanvas.id = "pairwise-canvas";
+    pairwiseCanvas.className = "solid-border";
     $("#pairwise-interaction").empty();
     $("#pairwise-interaction").append(pairwiseCanvas);
-    
+
     if (globalTransforms == undefined) {
         
         pieceTransform0 = {
@@ -469,193 +453,3 @@ function toggleBoundary() {
 
 }
 
-
-
-function initImgCanvas() {
-
-    imgCanvas = document.createElement("canvas");
-    imgCanvas.width = inputImg.width;
-    imgCanvas.height = inputImg.height;
-
-    imgCtx = imgCanvas.getContext("2d");
-    imgCtx.drawImage(inputImg, 0, 0);
-
-}
-
-function getImgSceneAspect() {
-
-    var scene = $("#scene")[0];
-    var sceneAspect = scene.width / scene.height;
-    var imgAspect = inputImg.width / inputImg.height;
-    
-    if (imgAspect >= sceneAspect) {
-        scaledWidth = scene.width;
-        scaledHeight = scene.width / inputImg.width * inputImg.height;
-    } else {
-        scaledWidth = scene.height / inputImg.height * inputImg.width;
-        scaledHeight = scene.height;
-    }
-
-}
-
-function showImg(img) {
-
-    console.log("Show image.");
-
-    var scene = $("#scene")[0];
-    var ctx = scene.getContext("2d");
-    
-    ctx.clearRect(0, 0, scene.width, scene.height);
-    ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
-
-}
-
-function savePieces() {
-
-    var tmp = getRegions(regionMat, regionNum);
-    var pieceSize = tmp[0];
-    var bound = tmp[1];
-
-    $("#piece-size").html(pieceSize[0] + " x " + pieceSize[1]);
-
-    var zip = new JSZip();
-
-    // var str = "width " + pieceSize[0] + "\n\r" + "height " + pieceSize[1];
-    // zip.file("info.txt", str);
-
-    var pieceCanvas = document.createElement("canvas");
-    pieceCanvas.width = pieceSize[0];
-    pieceCanvas.height = pieceSize[1];
-    var pieceCtx = pieceCanvas.getContext("2d");
-    var imgData = imgCtx.getImageData(0, 0, inputImg.width, inputImg.height);
-
-    var pieceInfo = [];
-
-    for (var i = 0; i < regionNum; i++) {
-        
-        var pieceLeft = Math.round((pieceSize[0] - bound.width[i]) / 2);
-        var pieceTop = Math.round((pieceSize[1] - bound.height[i]) / 2);
-
-        var pieceName = "piece-" + i + ".jpg";
-        var pieceData = imgCtx.createImageData(pieceSize[0], pieceSize[1]);
-
-        var dx = bound.left[i] - pieceLeft;
-        var dy = bound.top[i] - pieceTop;
-
-        pieceInfo.push({
-            "id": i,
-            "dx": dx,
-            "dy": dy
-        });
-
-        pieceData = applyRegionMask(pieceData, imgData, regionMat, i, bound, pieceLeft, pieceTop);
-        pieceCtx.putImageData(pieceData, 0, 0);
-        var pieceBase64 = pieceCanvas.toDataURL("image/jpeg", 1).split("base64,");
-        
-        zip.file(pieceName, pieceBase64[1], {base64: true});
-
-    }
-
-    // Save groundtruth
-    zip.file("groundtruth.json", JSON.stringify(pieceInfo));
-
-    // Save chopping result
-    var scene = $("#scene")[0];
-    var choppingResult = scene.toDataURL("image/jpeg", 1).split("base64,");
-    zip.file("chopping-result.jpg", choppingResult[1], {base64: true});
-
-    $("#status").html("Generate pieces. Done.");
-
-    var zipName = inputImgName + "-pieces.zip";
-    zip.generateAsync({type:"blob"}).then(function(content) {
-        saveAs(content, zipName);
-    });
-
-}
-
-function rectangleChopping() {
-    var w = 100;
-    var n = 5; 
-    for (var i = 1; i < 5; i++) {
-        var mean = 1 / (n - i + 1);
-        var stdDev = mean / 3;
-        var x = randNormDist(mean, stdDev);
-        console.log(x);
-    }
-}
-
-function applyChoppingMat(choppingMat) {
-
-    showImg(inputImg);
-
-    var scene = $("#scene")[0];
-    var ctx = scene.getContext("2d");
-
-    var choppingMark = ctx.createImageData(1, 1);
-    choppingMark.data[0] = 255;
-    choppingMark.data[3] = 255;
-
-    var heightScale = scaledHeight / inputImg.height;
-    var widthScale = scaledWidth / inputImg.width;
-
-    for (var i = 0; i < inputImg.height; i++) {
-        for (var j = 0; j < inputImg.width; j++) {
-            
-            if (choppingMat[i][j] == 2) {
-                var dx = Math.floor(j * widthScale);
-                var dy = Math.floor(i * heightScale);
-                ctx.putImageData(choppingMark, dx, dy);
-            }
-
-        }
-    }
-
-}
-
-function randomChopping() {
-    
-    var rowSeams = $("#row-seams").val();
-    var colSeams = $("#col-seams").val();
-    var smallRegion = $("#small-region").val();
-
-    var choppingMatVer = seamChopping(inputImg.width, inputImg.height, colSeams, 0);
-
-    var choppingMatHor = seamChopping(inputImg.height, inputImg.width, rowSeams, 0);
-    choppingMatHor = rotateMat(choppingMatHor);
-
-    var choppingMat = maxMat(choppingMatVer, choppingMatHor);
-
-    var tmp = fineTuningRegion(choppingMat, smallRegion);
-    regionMat = tmp[0];
-    choppingMat = tmp[1];
-    regionNum = tmp[2];
-
-    $("#region-num").html(regionNum);
-    
-    applyChoppingMat(choppingMat);
-
-    $("#save-pieces-btn")[0].disabled = false;
-
-    $("#status").html("Seam chopping. Done.");
-    
-}
-
-function startChopping() {
-
-    var method = $("input[name='method']:checked").val();
-
-    console.log(method.toUpperCase(), "chopping.");
-
-    switch (method) {
-        case "rectangle": 
-            rectangleChopping();
-            break;
-        case "random":
-            randomChopping();
-            break;
-        case "seam":
-            seamChopping();
-            break;
-    }
-
-}

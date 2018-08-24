@@ -70,3 +70,7 @@ p {
 b {
 	color:orange;
 }
+
+.solid-border {
+    border: 1px solid;
+}
