@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>Puzzle Solving</title>
+
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+	<!-- jquery -->
+	<script type="text/javascript" src="js/lib/jquery-3.3.1.min.js"></script>
+
+	<!-- bootstrap -->
+	<script type="text/javascript" src="js/lib/popper.min.js"></script>
+	<script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
+
+	<!-- FileSaver.js -->
+	<script type="text/javascript" src="js/lib/canvas-toBlob.js"></script>
+	<script type="text/javascript" src="js/lib/FileSaver.min.js"></script>
+
+	<!-- zip.js -->
+	<script type="text/javascript" src="js/lib/jszip.min.js"></script>
+
+	<!-- custom js -->
+	<script type="text/javascript" src="js/debugger.js"></script>
+
+</head>
+
+<body>
+	<div class="page">
+		<div class="main">
+			
+			<div class="row justify-content-start">
+				<strong>Pairwise Matching:</strong>
+				<div id="pairwise-interaction"></div>
+			</div>
+
+			<div class="row justify-content-start">
+				<hr>
+				<strong>Composition:</strong>
+				<div id="global-image"></div>
+			</div>
+
+			<!-- Add pieces here. -->
+			<div class="row justify-content-start">
+				<hr>
+				<strong>All Pieces:</strong>
+				<div id="pieces"></div>
+			</div>
+			
+
+			<div class="row justify-content-center">
+				<hr>
+				<p>Authors: Yongqing Liang, Xin Li. All rights reserved.</p>
+			</div>
+			
+
+		</div>
+		<div class="side">
+			
+			<div class="form-group">
+				<div class="form-row">
+					<strong>Infomation:</strong>
+				</div>
+				<div class="form-row">
+					<p>Pieces Number:</p>
+					<p class="offset-1" id="pieces-num">Unknown</p>
+				</div>
+				<div class="form-row">
+					<p>Piece Size:</p>
+					<p class="offset-1" id="piece-size">Unknown</p>
+				</div>
+				<div class="form-row">
+					<p>Composition Size:</p>
+					<p class="offset-1" id="composition-size">Unknown</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-row">
+					<strong>Status:</strong>
+				</div>
+				<div class="form-row">
+					<p id="status"></p>
+				</div>
+			</div>
+			
+			<hr>
+
+			<!-- Upload and Save Data -->
+			<div class="form-group">
+				<div class="form-row">
+					<strong>Input / Output:</strong>
+				</div>
+				<div class="form-row">
+					<input type="file" class="form-control-file" id="upload-file">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-row">
+					<button type="button" class="btn btn-primary btn-sm" onclick="uploadPieces()">
+						Upload Pieces
+					</button>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-row">
+					<button type="button" class="btn btn-primary btn-sm" id="btn-load-transforms" onclick="uploadGlobalTransform()" disabled>
+						Upload Global Transforms
+					</button>
+				</div>
+			</div>
+
+			<hr>
+
+			<!-- Pieces Parameters -->
+			<div class="form-group">
+				<div class="form-row">
+					<strong>Pairwise Interaction:</strong>
+				</div>
+				<div class="form-row">
+					<p class="col-3 col-form-label">Pieces: </p>
+					<input type="text" class="form-control form-control-sm col-2" id="piece-id0" value="0">
+					<input type="text" class="form-control form-control-sm col-2" id="piece-id1" value="1">
+					<button type="button" class="btn btn-primary btn-sm offset-2 col-3" id="btn-select-pieces" onclick="selectPieces()" disabled>Select</button>
+				</div>
+				<div class="form-row">
+					<p class="col-5 col-form-label">Rotate 1st Piece: </p>
+					<button type="button" class="btn btn-primary btn-sm col-3" id="btn-rotate-first-left" onclick="rotateFirstLeft()" disabled>Left</button>
+					<button type="button" class="btn btn-primary btn-sm offset-1 col-3" id="btn-rotate-first-right" onclick="rotateFirstRight()" disabled>Right</button>
+				</div>
+				<div class="form-row">
+					<p class="col-5 col-form-label">Rotate 2nd Piece: </p>
+					<button type="button" class="btn btn-primary btn-sm col-3" id="btn-rotate-second-left" onclick="rotateSecondLeft()" disabled>Left</button>
+					<button type="button" class="btn btn-primary btn-sm offset-1 col-3" id="btn-rotate-second-right" onclick="rotateSecondRight()" disabled>Right</button>
+				</div>
+				<div class="form-row">
+					<button type="button" class="btn btn-primary btn-sm col-8" id="btn-toggle-contour" onclick="toggleContour()" disabled>Toggle Contour</button>
+					<button type="button" class="btn btn-primary btn-sm col-3 offset-1" id="btn-save-pairwise-transformation" onclick="savePairwiseTransformation()" disabled>Save</button>
+				</div>
+				<div class="form-row">
+					<p class="col-6 text-right">Piece 1</p>
+					<p class="col-6 text-right">Piece 2</p>
+				</div>
+				<div class="form-row">
+					<p class="col-2">dx:</p>
+					<p class="col-4 text-right" id="piece0-dx">0</p>
+					<p class="col-6 text-right" id="piece1-dx">0</p>
+				</div>
+				<div class="form-row">
+					<p class="col-2">dy:</p>
+					<p class="col-4 text-right" id="piece0-dy">0</p>
+					<p class="col-6 text-right" id="piece1-dy">0</p>
+				</div>
+				<div class="form-row">
+					<p class="col-2">ro:</p>
+					<p class="col-4 text-right" id="piece0-rotation">0</p>
+					<p class="col-6 text-right" id="piece1-rotation">0</p>
+				</div>
+			</div>
+
+			<hr>
+
+			<div class="form-group">
+				<div class="form-row">
+					<strong>Instructions:</strong>
+				</div>
+				<div class="form-row">
+					<p></p>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+
+</html>

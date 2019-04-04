@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>Image Kneader</title>
+
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+	<!-- jquery -->
+	<script type="text/javascript" src="js/lib/jquery-3.3.1.min.js"></script>
+
+	<!-- bootstrap -->
+	<script type="text/javascript" src="js/lib/popper.min.js"></script>
+	<script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
+
+	<!-- FileSaver.js -->
+	<script type="text/javascript" src="js/lib/canvas-toBlob.js"></script>
+	<script type="text/javascript" src="js/lib/FileSaver.min.js"></script>
+
+	<!-- zip.js -->
+	<script type="text/javascript" src="js/lib/jszip.min.js"></script>
+
+	<!-- custom js -->
+	<script type="text/javascript" src="js/generator.js"></script>
+
+</head>
+
+<body>
+	<div class="page">
+		<div class="main">
+
+			<!-- scene -->
+			<canvas id="scene" width="960" height="600"></canvas>
+			<p>Authors: Yongqing Liang, Xin Li. All rights reserved.</p>
+
+		</div>
+		<div class="side">
+			
+			<div class="form-group">
+				<div class="form-row">
+					<strong>Infomation:</strong>
+				</div>
+				<div class="form-row">
+					<p>Image Size:</p>
+					<p class="offset-1" id="img-size">Unknown</p>
+				</div>
+				<div class="form-row">
+					<p>Region Number:</p>
+					<p class="offset-1" id="region-num">Unknown</p>
+				</div>
+				<div class="form-row">
+					<p>Piece Size:</label>
+					<p class="offset-1" id="piece-size">Unknown</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-row">
+					<strong>Status:</strong>
+				</div>
+				<div class="form-row">
+					<p id="status"></p>
+				</div>
+			</div>
+			
+			<hr>
+
+			<!-- Upload and Save Data -->
+			<div class="form-group">
+				<div class="form-row">
+					<strong>Input / Output:</strong>
+				</div>
+				<div class="form-row">
+					<input type="file" class="form-control-file" id="img-file">
+				</div>
+				<br>
+				<div class="form-row">
+					<button type="button" class="btn btn-primary btn-sm col-5" onclick="uploadImg()">
+						Upload Img
+					</button>
+					<button type="button" class="btn btn-primary btn-sm col-6 offset-1" id="save-pieces-btn" onclick="savePieces()" disabled>
+						Save Pieces
+					</button>
+				</div>
+			</div>
+
+			<hr>
+
+			<!-- Pieces Parameters -->
+			<div class="form-group">
+				<div class="form-row">
+					<strong>Parameters:</strong>
+				</div>
+				<div class="form-row">
+					<label class="col-9 col-form-label">Row Seams: </label>
+					<input type="text" class="form-control form-control-sm col-3" id="row-seams" value="5">
+				</div>
+				<div class="form-row">
+					<label class="col-9 col-form-label">Col Seams: </label>
+					<input type="text" class="form-control form-control-sm col-3" id="col-seams" value="5">
+				</div>
+				<div class="form-row">
+					<label class="col-9 col-form-label">Small Region Pixel: </label>
+					<input type="text" class="form-control form-control-sm col-3" id="small-region" value="1000">
+				</div>
+				<div class="form-row">
+					<label class="col-9 col-form-label">Carving Step Hori: </label>
+					<input type="text" class="form-control form-control-sm col-3" id="carving-step-hori" value="10">
+				</div>
+				<div class="form-row">
+					<label class="col-9 col-form-label">Carving Step Vert: </label>
+					<input type="text" class="form-control form-control-sm col-3" id="carving-step-vert" value="30">
+				</div>
+				<div class="custom-control custom-radio">
+					<input type="radio" id="random-chopping" name="method" class="custom-control-input" value="random" checked>
+					<label class="custom-control-label" for="random-chopping">Random Chopping</label>
+				</div>
+				<br>
+				<button type="button" class="btn btn-primary btn-sm" onclick="startChopping()" id="start-chopping-btn" disabled>
+					Start Chopping
+				</button>
+			</div>
+
+			<hr>
+
+			<div class="form-group">
+				<div class="form-row">
+					<strong>Instructions:</strong>
+				</div>
+				<div class="form-row">
+					<p>Step 1. Upload an image.</p>
+					<p>Step 2. Start chopping.</p>
+					<p>Step 3. Save pieces.</p>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+
+</html>
