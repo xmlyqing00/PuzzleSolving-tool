@@ -116,8 +116,8 @@ function drawPieceToImage(pieceHiddenCtx, globalHiddenCtx, pieceTransform) {
         for (var x = Math.floor(Math.max(0, 0-pieceTransform.dx)); x < pieceWidth; x++) {
 
             var id = (y * pieceWidth + x) * 4;
-            if ((globalData.data[id + 3] == 0 && pieceData.data[id + 3] == 255) &&
-                (pieceData.data[id] + pieceData.data[id+1] + pieceData.data[id+2] > 0)) {
+            if ((globalData.data[id + 3] == 0 && pieceData.data[id + 3] == 255) && 
+                !(pieceData.data[id] == 0 && pieceData.data[id+1] == 0 && pieceData.data[id+2] == 0)) {
                 globalData.data[id] = pieceData.data[id];
                 globalData.data[id + 1] = pieceData.data[id + 1];
                 globalData.data[id + 2] = pieceData.data[id + 2];
@@ -182,6 +182,7 @@ function uploadPieces() {
 
     console.log("Uploaded pieces package:", pkgName);
     $("#status").html("Uploaded pieces package.");
+    pieceImgArr = [];
 
     JSZip.loadAsync(file).then(function(zip) {
 
@@ -284,6 +285,8 @@ function showPieces() {
 
     }
 
+    $("#global-image").empty();
+    $("#pairwise-interaction").empty();
     console.log("Show pieces.");
 
 }
@@ -536,9 +539,12 @@ function showPairwisePieces() {
     if (showContourStatus) {
         pieceHiddenCtx = drawContour(pieceHiddenCtx);
     }
-    
-    pairwiseHiddenCtx.drawImage(pieceHiddenCanvas, 
-        pieceWidth, pieceHeight, pieceWidth, pieceHeight);
+
+    pieceTransformCtr = {
+        "dx": pieceWidth,
+        "dy": pieceHeight
+    };
+    pairwiseHiddenCtx = drawPieceToImage(pieceHiddenCtx, pairwiseHiddenCtx, pieceTransformCtr);
     
     // Draw piece 1 to hidden global canvas
     pieceHiddenCtx.save();
