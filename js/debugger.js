@@ -25,10 +25,13 @@ var selectPairwisePieces = false;
 const PI_2 = 2 * Math.PI;
 const rotate_step = 0.08727;
 
+// Uitls
 const way = [[0,1], [0,-1], [1,0], [-1,0], [1,1], [1,-1], [-1,1], [-1,-1]];
 const connectedWay = 8;
 const pieceReg = /^piece-\d+(\.jpg$|\.jpeg$|\.png$|\.gif$|\.bmp$)/;
 const pieceNameReg = /^piece-(\d+)(\.jpg$|\.jpeg$|\.png$|\.gif$|\.bmp$)/;
+
+var blank_color = [0, 0, 0]; // In RGB format
 
 $(document).ready(function () {
     
@@ -117,7 +120,7 @@ function drawPieceToImage(pieceHiddenCtx, globalHiddenCtx, pieceTransform) {
 
             var id = (y * pieceWidth + x) * 4;
             if ((globalData.data[id + 3] == 0 && pieceData.data[id + 3] == 255) && 
-                !(pieceData.data[id] == 0 && pieceData.data[id+1] == 0 && pieceData.data[id+2] == 0)) {
+                !(pieceData.data[id] == blank_color[0] && pieceData.data[id+1] == blank_color[1] && pieceData.data[id+2] == blank_color[2])) {
                 globalData.data[id] = pieceData.data[id];
                 globalData.data[id + 1] = pieceData.data[id + 1];
                 globalData.data[id + 2] = pieceData.data[id + 2];
@@ -230,6 +233,14 @@ function uploadPieces() {
 
                     pieceImg.src = "data:image/jpeg;base64," + data64;
                     
+                });
+            } else if (relativePath == "config.txt") {
+
+                zipEntry.async("text").then(function (text) {
+                    config_arr = text.split("\n");
+                    colors = config_arr[2].split(" ");
+                    blank_color = [parseInt(colors[2]), parseInt(colors[1]), parseInt(colors[0])];
+                    console.log("Blank color:", blank_color);
                 });
             }
 

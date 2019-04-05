@@ -6,6 +6,7 @@ def generate_puzzle(args):
     
     print('Groundtruth img path:', args.img_path)
     print('Piece num: %d, sample num: %d\n' % (args.piece_n, args.sample_n))
+    print('Blank color:', args.blank_color)
 
     generator = PuzzleGenerator(args.img_path)
 
@@ -14,7 +15,7 @@ def generate_puzzle(args):
         print('Sample:', i)
 
         generator.run(args.piece_n, args.offset_h, args.offset_w, args.small_region, args.rotate)
-        generator.save()
+        generator.save(args.blank_color)
 
 if __name__ == '__main__':
 
@@ -37,10 +38,15 @@ if __name__ == '__main__':
         0.5, no interaction will happen.')
     parser.add_argument('-s', '--small-region', default=0.25, type=float,
         help='A threshold controls the minimum area of a region with respect to initial rigid \
-        piece area.')
+        piece area. Default is 0.25.')
     parser.add_argument('-r', '--rotate', default=180, type=float,
-        help='A range of random rotation (in degree) applied on puzzle pieces. The value should \
-        be in [0, 180]. Each piece randomly select a rotation degree in [-r, r]')
+        help='A range of random rotation (in degree) applied on puzzle pieces. Default is 180. \
+        The value should be in [0, 180]. Each piece randomly select a rotation degree in [-r, r]')
+    parser.add_argument('--blank_color', default=[0, 0, 0], type=int, nargs=3,
+        help='Blank color to fill the empty area. Default is [0, 0, 0]. The type is three uint8 \
+        numbers in BGR OpenCV format.')
     args = parser.parse_args()
+
+    args.blank_color = tuple(args.blank_color)
 
     generate_puzzle(args)

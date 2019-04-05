@@ -231,11 +231,14 @@ class PuzzleGenerator:
             pad_bottom = r - region_rgbs[i].shape[0] - pad_top
             pad_right = r - region_rgbs[i].shape[1] - pad_left
 
-            region_pad = cv2.copyMakeBorder(
-                region_rgbs[i], pad_top, pad_bottom, pad_left, pad_right, cv2.BORDER_CONSTANT, blank_color)
+            region_pad = cv2.copyMakeBorder(region_rgbs[i], 
+                pad_top, pad_bottom, pad_left, pad_right, cv2.BORDER_CONSTANT, value=blank_color)
 
             degree = random.uniform(-self.rot_range, self.rot_range)
-            region_rot = ndimage.rotate(region_pad, degree, reshape=False)
+            # region_rot = ndimage.rotate(region_pad, degree, reshape=False, cval=blank_color)
+            rotation_mat = cv2.getRotationMatrix2D((region_pad.shape[1]/2, region_pad.shape[0]/2), degree, 1)
+            region_rot = cv2.warpAffine(region_pad, rotation_mat, (region_pad.shape[1], region_pad.shape[0]), 
+                borderMode=cv2.BORDER_CONSTANT, borderValue=blank_color)
 
             cv2.imwrite(os.path.join(puzzle_path, 'piece-%d.png' % i), region_rot)
 
