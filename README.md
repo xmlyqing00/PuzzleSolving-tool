@@ -10,9 +10,13 @@ This is a package contains three tools for puzzle solving:
 
 ### Generator in Python
 
-A tool for generating puzzles.
+A tool for generating puzzles. 
 
-optional arguments:
+Run `python3 generate_puzzle.py -i data/sample.png`.
+
+Requirement: OpenCV in Python.
+
+Optional arguments:
 
 | option | value | description |
 | ---- | ---- | ---- |
