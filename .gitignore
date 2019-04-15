@@ -1,7 +1,12 @@
 .DS_Store
 __pycache__/
+.vscode/
+
+*.o
 
 data/puzzles/
 data/raw_regions/
+
+samples/read_puzzle
 
 # none

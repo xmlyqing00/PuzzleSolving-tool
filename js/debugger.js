@@ -31,7 +31,7 @@ const connectedWay = 8;
 const pieceReg = /^piece-\d+(\.jpg$|\.jpeg$|\.png$|\.gif$|\.bmp$)/;
 const pieceNameReg = /^piece-(\d+)(\.jpg$|\.jpeg$|\.png$|\.gif$|\.bmp$)/;
 
-var blank_color = [0, 0, 0]; // In RGB format
+var bg_color = [0, 0, 0]; // In RGB format
 
 $(document).ready(function () {
     
@@ -120,7 +120,7 @@ function drawPieceToImage(pieceHiddenCtx, globalHiddenCtx, pieceTransform) {
 
             var id = (y * pieceWidth + x) * 4;
             if ((globalData.data[id + 3] == 0 && pieceData.data[id + 3] == 255) && 
-                !(pieceData.data[id] == blank_color[0] && pieceData.data[id+1] == blank_color[1] && pieceData.data[id+2] == blank_color[2])) {
+                !(pieceData.data[id] == bg_color[0] && pieceData.data[id+1] == bg_color[1] && pieceData.data[id+2] == bg_color[2])) {
                 globalData.data[id] = pieceData.data[id];
                 globalData.data[id + 1] = pieceData.data[id + 1];
                 globalData.data[id + 2] = pieceData.data[id + 2];
@@ -239,8 +239,8 @@ function uploadPieces() {
                 zipEntry.async("text").then(function (text) {
                     config_arr = text.split("\n");
                     colors = config_arr[2].split(" ");
-                    blank_color = [parseInt(colors[2]), parseInt(colors[1]), parseInt(colors[0])];
-                    console.log("Blank color:", blank_color);
+                    bg_color = [parseInt(colors[2]), parseInt(colors[1]), parseInt(colors[0])];
+                    console.log("Background color:", bg_color);
                 });
             }
 

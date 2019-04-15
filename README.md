@@ -28,7 +28,7 @@ Optional arguments:
 | --offset-w | OFFSET_W | Provide the vertical offset rate when chopping the image. Default is 1. The offset is the rate of the initial piece width. If the value is less than 0.5, no interaction will happen. |
 | -s | SMALL_REGION | A threshold controls the minimum area of a region with respect to initial rigid piece area. Default is 0.25. |
 | -r | ROTATE | A range of random rotation (in degree) applied on puzzle pieces. Default is 180. The value should be in \[0, 180\]. Each piece randomly select a rotation degree in \[-r, r\] |
-| --blank_color | BLANK_COLOR | Blank color to fill the empty area. Default is \[0, 0, 0\]. The type is three uint8 numbers in BGR OpenCV format. |
+| --bg_color | BG_COLOR | Background color to fill the empty area. Default is \[0, 0, 0\]. The type is three uint8 numbers in BGR OpenCV format. |
 
 The output file tree is:
 
@@ -63,7 +63,7 @@ File formats:
 1. config.txt:
     1. First line: prefix of piece images, is always "piece-".
     2. Second line: number of piece images, one integer.
-    3. Third line: blank color for empty areas in BGR OpenCV format.
+    3. Third line: bg color for empty areas in BGR OpenCV format.
 2. groundtruth.json (used for Debugger in Javascript):
     1. id: piece id.
     2. dx: horizontal translation of the piece.

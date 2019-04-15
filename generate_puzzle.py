@@ -6,7 +6,7 @@ def generate_puzzle(args):
     
     print('Groundtruth img path:', args.img_path)
     print('Piece num: %d, sample num: %d\n' % (args.piece_n, args.sample_n))
-    print('Blank color:', args.blank_color)
+    print('Background color:', args.bg_color)
 
     generator = PuzzleGenerator(args.img_path)
 
@@ -15,7 +15,7 @@ def generate_puzzle(args):
         print('Sample:', i)
 
         generator.run(args.piece_n, args.offset_h, args.offset_w, args.small_region, args.rotate)
-        generator.save(args.blank_color)
+        generator.save(args.bg_color)
 
 if __name__ == '__main__':
 
@@ -42,11 +42,11 @@ if __name__ == '__main__':
     parser.add_argument('-r', '--rotate', default=180, type=float,
         help='A range of random rotation (in degree) applied on puzzle pieces. Default is 180. \
         The value should be in [0, 180]. Each piece randomly select a rotation degree in [-r, r]')
-    parser.add_argument('--blank_color', default=[0, 0, 0], type=int, nargs=3,
-        help='Blank color to fill the empty area. Default is [0, 0, 0]. The type is three uint8 \
+    parser.add_argument('--bg_color', default=[0, 0, 0], type=int, nargs=3,
+        help='Background color to fill the empty area. Default is [0, 0, 0]. The type is three uint8 \
         numbers in BGR OpenCV format.')
     args = parser.parse_args()
 
-    args.blank_color = tuple(args.blank_color)
+    args.bg_color = tuple(args.bg_color)
 
     generate_puzzle(args)

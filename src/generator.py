@@ -182,9 +182,9 @@ class PuzzleGenerator:
         f.close()
         print('\tSave to %s & %d.txt' % (file_path, iter))
 
-    def save_puzzle(self, iter, blank_color):
+    def save_puzzle(self, iter, bg_color):
         
-        blank_mat = np.full(self.img.shape, blank_color, np.uint8)
+        bg_mat = np.full(self.img.shape, bg_color, np.uint8)
         region_mat_np = np.array(self.region_mat, np.uint32)
 
         region_rgbs = []
@@ -200,7 +200,7 @@ class PuzzleGenerator:
             
             region_map = region_mat_np == i
             region_map3 = np.repeat(region_map, 3).reshape(self.img.shape)
-            rgb = np.where(region_map3, self.img, blank_mat)
+            rgb = np.where(region_map3, self.img, bg_mat)
 
             coords = np.argwhere(region_map)
             y0, x0 = coords.min(axis=0)
@@ -232,13 +232,13 @@ class PuzzleGenerator:
             pad_right = r - region_rgbs[i].shape[1] - pad_left
 
             region_pad = cv2.copyMakeBorder(region_rgbs[i], 
-                pad_top, pad_bottom, pad_left, pad_right, cv2.BORDER_CONSTANT, value=blank_color)
+                pad_top, pad_bottom, pad_left, pad_right, cv2.BORDER_CONSTANT, value=bg_color)
 
             degree = random.uniform(-self.rot_range, self.rot_range)
-            # region_rot = ndimage.rotate(region_pad, degree, reshape=False, cval=blank_color)
+            # region_rot = ndimage.rotate(region_pad, degree, reshape=False, cval=bg_color)
             rotation_mat = cv2.getRotationMatrix2D((region_pad.shape[1]/2, region_pad.shape[0]/2), degree, 1)
             region_rot = cv2.warpAffine(region_pad, rotation_mat, (region_pad.shape[1], region_pad.shape[0]), 
-                borderMode=cv2.BORDER_CONSTANT, borderValue=blank_color)
+                borderMode=cv2.BORDER_CONSTANT, borderValue=bg_color)
 
             cv2.imwrite(os.path.join(puzzle_path, 'piece-%d.png' % i), region_rot)
 
@@ -269,7 +269,7 @@ class PuzzleGenerator:
 
         outfile.write('piece-\n') # Prefix
         outfile.write('%d\n' % self.region_cnt) # Piece number
-        outfile.write('%d %d %d\n' % (blank_color[0], blank_color[1], blank_color[2])) # blank color in BGR
+        outfile.write('%d %d %d\n' % (bg_color[0], bg_color[1], bg_color[2])) # bg color in BGR
 
         outfile.close()
     
@@ -299,10 +299,10 @@ class PuzzleGenerator:
         self.get_mask(offset_rate_h, offset_rate_w)
         self.get_regions(small_region_area_ratio)
 
-    def save(self, blank_color=(0,0,0)):
+    def save(self, bg_color=(0,0,0)):
 
         exist_data_len = len(glob(os.path.join(self.raw_regions, '*.npy')))
         self.save_raw_regions(exist_data_len)
-        self.save_puzzle(exist_data_len, blank_color)
+        self.save_puzzle(exist_data_len, bg_color)
         self.save_zip(exist_data_len)
 
