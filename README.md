@@ -6,7 +6,7 @@ This is a package contains three tools for puzzle solving:
 2. Generator in Javascript (deprecated). [link](https://lyqspace.github.io/PuzzleSolving-tool/generator.html)
 3. Visualization tool (Debugger) in Javascript. [link](https://lyqspace.github.io/PuzzleSolving-tool/debugger.html)
 
-## 1. Usages
+## 1 Usages
 
 ### 1.1 Generator in Python
 
@@ -16,7 +16,7 @@ Run `python3 generate_puzzle.py -i data/sample.png`.
 
 Requirement: OpenCV in Python.
 
-Optional arguments:
+#### 1.1.1 Optional arguments:
 
 | option | value | description |
 | ---- | ---- | ---- |
@@ -30,7 +30,7 @@ Optional arguments:
 | -r | ROTATE | A range of random rotation (in degree) applied on puzzle pieces. Default is 180. The value should be in \[0, 180\]. Each piece randomly select a rotation degree in \[-r, r\] |
 | --bg_color | BG_COLOR | Background color to fill the empty area. Default is \[0, 0, 0\]. The type is three uint8 numbers in BGR OpenCV format. |
 
-The output file tree is:
+#### 1.1.2 Output file tree:
 
 ```bash
 .
@@ -59,7 +59,7 @@ The output file tree is:
 │   │   └── ....
 ```
 
-File formats:
+#### 1.1.3 File formats:
 1. config.txt:
     1. First line: prefix of piece images, is always "piece-".
     2. Second line: number of piece images, one integer.
@@ -80,7 +80,7 @@ File formats:
 2. Upload a groundtruth file in json format to see the groundtruth composition.
 3. You can interactively maniplute any two pieces.
 
-## 2. Samples
+## 2 Samples
 
 Two sample codes show how to read the generated puzzle into memory and apply the groundtruth on each piece. They are both required OpenCV.
 
