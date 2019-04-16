@@ -9,10 +9,10 @@ default: read_puzzle
 .PHONY: clean
 
 read_puzzle: read_puzzle.o Makefile
-	g++ $< -o $@ $(CXXFLAGS) $(LIBS) 
+	g++ $< -g -o $@ $(CXXFLAGS) $(LIBS) 
 
 %.o: %.cpp Makefile
-	g++ $< -c $(CXXFLAGS) $(INCS)
+	g++ $< -c -g $(CXXFLAGS) $(INCS)
 
 clean:
 	rm -f *.o read_puzzle

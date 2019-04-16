@@ -22,6 +22,8 @@ class Puzzle:
 
         file.close()
 
+        print('Prefix:', self.prefix)
+        print('Piece num:', self.puzzle_n)
         print('Puzzle path:', puzzle_path)
         print('Background color:', self.bg_color)
 
@@ -32,7 +34,7 @@ class Puzzle:
         
         self.piece_size = self.pieces[0].shape[:2]
 
-        print('Piece num:', self.puzzle_n, 'Piece size:', self.piece_size)
+        print('Piece size:', self.piece_size)
         print('Loaded all pieces.\n')
 
 
@@ -74,21 +76,21 @@ class Puzzle:
 
         canvas = np.zeros(self.img_size + [3], np.uint8)
         
-        st_y = max(0, self.gt[idx]['dy'])
-        st_x = max(0, self.gt[idx]['dx'])
+        dst_y = max(0, self.gt[idx]['dy'])
+        dst_x = max(0, self.gt[idx]['dx'])
         roi = canvas[
-            st_y:self.gt[idx]['dy'] + self.piece_size[0],
-            st_x:self.gt[idx]['dx'] + self.piece_size[1]]
+            dst_y:self.gt[idx]['dy'] + self.piece_size[0],
+            dst_x:self.gt[idx]['dx'] + self.piece_size[1]]
         
-        offset_y = st_y - self.gt[idx]['dy']
-        offset_x = st_x - self.gt[idx]['dx']
+        src_y = dst_y - self.gt[idx]['dy']
+        src_x = dst_x - self.gt[idx]['dx']
         canvas[
-            st_y:self.gt[idx]['dy'] + self.piece_size[0],
-            st_x:self.gt[idx]['dx'] + self.piece_size[1]] \
+            dst_y:self.gt[idx]['dy'] + self.piece_size[0],
+            dst_x:self.gt[idx]['dx'] + self.piece_size[1]] \
             = np.where(
-                piece_rotcr[offset_y:, offset_x:] == self.bg_color, 
+                piece_rotcr[src_y:, src_x:] == self.bg_color, 
                 roi, 
-                piece_rotcr[offset_y:, offset_x:])
+                piece_rotcr[src_y:, src_x:])
 
         if display:
             cv2.imshow('piece', self.pieces[idx])
@@ -99,11 +101,11 @@ class Puzzle:
 if __name__ == '__main__':
     
     # Load puzzle to memory
-    puzzle_path = 'data/puzzles/10'
+    puzzle_path = '../data/puzzles/10'
     puzzle = Puzzle(puzzle_path)
     puzzle.read_groundtruth()
     
     # Apply groundtruth to one piece, then show it.
-    piece_idx = 3
+    piece_idx = 10
     puzzle.apply_groundtruth(piece_idx, display=True)
 
