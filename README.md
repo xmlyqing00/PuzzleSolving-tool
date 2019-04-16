@@ -6,6 +6,9 @@ This is a package contains three tools for puzzle solving:
 2. Generator in Javascript (deprecated). [link](https://lyqspace.github.io/PuzzleSolving-tool/generator.html)
 3. Visualization tool (Debugger) in Javascript. [link](https://lyqspace.github.io/PuzzleSolving-tool/debugger.html)
 
+A screenshot of the visualization tool:
+![img](screenshot_visulization.png)
+
 ## 1 Usages
 
 ### 1.1 Generator in Python
