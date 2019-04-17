@@ -301,7 +301,7 @@ class PuzzleGenerator:
         self.w_n = math.floor(math.sqrt(piece_n / self.aspect_ratio))
         self.h_n = math.floor(self.w_n * self.aspect_ratio)
 
-        print('\tCut w: %d, h: %d' % (self.w_n, self.h_n))
+        print('\tInitial block in hori: %d, in vert: %d' % (self.w_n, self.h_n))
         print('\tOffset rate h: %.2f, w: %.2f, small region: %.2f, rot: %.2f' % 
             (offset_rate_h, offset_rate_w, small_region_area_ratio, rot_range))
         
