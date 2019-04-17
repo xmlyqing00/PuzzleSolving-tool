@@ -51,9 +51,17 @@ class PuzzleGenerator:
         x_arr = list(set(x_arr))
         y_arr = y_arr[:len(x_arr)]
         x_arr.sort()
-
+        
         if smooth_flag:
-            smooth_func = interpolate.interp1d(x_arr, y_arr, kind='cubic')
+            if len(x_arr) >= 4:
+                smooth_func = interpolate.interp1d(x_arr, y_arr, kind='cubic')
+            elif len(x_arr) == 3:
+                smooth_func = interpolate.interp1d(x_arr, y_arr, kind='quadratic')
+            elif len(x_arr) == 2:
+                smooth_func = interpolate.interp1d(x_arr, y_arr, kind='slinear')
+            else:
+                raise ValueError("The length of cutting points in x_arr must be larger than 0.")
+
             x_arr = np.arange(0, x_len, dtype=np.int32)
             y_arr = smooth_func(x_arr).astype(np.int32)
 
@@ -293,6 +301,7 @@ class PuzzleGenerator:
         self.w_n = math.floor(math.sqrt(piece_n / self.aspect_ratio))
         self.h_n = math.floor(self.w_n * self.aspect_ratio)
 
+        print('\tCut w: %d, h: %d' % (self.w_n, self.h_n))
         print('\tOffset rate h: %.2f, w: %.2f, small region: %.2f, rot: %.2f' % 
             (offset_rate_h, offset_rate_w, small_region_area_ratio, rot_range))
         
