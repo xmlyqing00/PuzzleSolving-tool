@@ -24,7 +24,7 @@ if __name__ == '__main__':
     parser.add_argument('-i', '--img-path', default=None, type=str, required=True,
         help='Path to the input image.')
     parser.add_argument('-n', '--piece-n', default=100, type=int,
-        help='Number of puzzle pieces. Default is 10. The actual number of puzzle pieces may be different.')
+        help='Number of puzzle pieces. Default is 100. The actual number of puzzle pieces may be different.')
     parser.add_argument(
         '-t', '--sample-n', default=1, type=int,
         help='Number of puzzle you want to generate from the input image. Default is 1.')
