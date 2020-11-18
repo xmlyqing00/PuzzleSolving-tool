@@ -3,8 +3,8 @@
 This is a package contains three tools for puzzle solving:
 
 1. Puzzle Pieces Generator
-  - Python based (Support command lines and batch generations).
-  - Web based (Use it without installation) [link](https://xmlyqing00.github.io/PuzzleSolving-tool/generator.html)
+   - Python based (Support command lines and batch generations).
+   - Web based (Use it without installation) [link](https://xmlyqing00.github.io/PuzzleSolving-tool/generator.html)
 2. Visualization tool (Web-based Debugger, use it without installation) [link](https://xmlyqing00.github.io/PuzzleSolving-tool/debugger.html)
 
 Please see our project [webpage](https://www.ece.lsu.edu/xinli/PuzzleSolving/index.html) for more information.
@@ -44,8 +44,6 @@ Run `python3 generate_puzzle.py -i data/sample.png`.
 │   │   │   ├── puzzle-0.zip
 │   │   │   ├── piece-0.png
 │   │   │   ├── piece-1.png
-│   │   │   ├── piece-2.png
-│   │   │   ├── piece-3.png
 │   │   │   └── ....
 │   │   ├── 1
 │   │   │   ├── config.txt
@@ -54,8 +52,6 @@ Run `python3 generate_puzzle.py -i data/sample.png`.
 │   │   │   ├── puzzle-1.zip
 │   │   │   ├── piece-0.png
 │   │   │   ├── piece-1.png
-│   │   │   ├── piece-2.png
-│   │   │   ├── piece-3.png
 │   │   │   └── ....
 │   │   └── ....
 ```
@@ -116,3 +112,22 @@ python ./read_puzzle.py
 make
 ./read_puzzle
 ```
+
+## 4 Citations
+
+If you use our codes or tools in your work. Please cite our paper,
+```
+JigsawNet: Shredded Image Reassembly Using Convolutional Neural Network and Loop-based Composition.
+C. Le and X. Li
+IEEE Transactions on Image Processing (TIP), 28(8):4000-4015, 2019.
+```
+
+If you use this tool to generate puzzle datasets, please also cite this github page, 
+```
+@misc{FragmentRepositoryLSUGVC2018,
+  title = {Image Puzzle Simulator},
+  author = {Yongqing Liang and Xin Li},          
+  howpublished = {https://github.com/xmlyqing00/PuzzleSolving-tool},
+  year = {2018},
+}
+``` 
