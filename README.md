@@ -1,13 +1,13 @@
 # PuzzleSolving-tool
 
-This is a package contains three tools for puzzle solving:
+This is a package containing three tools for puzzle solving:
 
 1. Puzzle Pieces Generator
    - Python based (Support command lines and batch generations).
    - Web based (Use it without installation) [link](https://xmlyqing00.github.io/PuzzleSolving-tool/generator.html)
 2. Visualization tool (Web-based Debugger, use it without installation) [link](https://xmlyqing00.github.io/PuzzleSolving-tool/debugger.html)
 
-Please see our project [webpage](https://www.ece.lsu.edu/xinli/PuzzleSolving/index.html) for more information.
+For automatic puzzle solving (fragmented image reassembly) algorithms, please see our project [webpage](https://www.ece.lsu.edu/xinli/PuzzleSolving/index.html) for more information.
 
 ## 1 Puzzle Pieces Generator
 
